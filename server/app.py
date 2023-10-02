@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, jsonify, make_response
+from flask import Flask, jsonify, make_response, request
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
 
@@ -50,7 +50,7 @@ class HeroByID(Resource):
             return response
 
 class Powers(Resource):
-    
+
     def get(self):
         power_dict = [p.to_dict() for p in Power.query.all()]
 
@@ -62,8 +62,42 @@ class Powers(Resource):
     
 # add the resource to the API   
 api.add_resource(Powers, '/powers')
+
+class PowerByID(Resource):
+    def get(self, id):
+        power = Power.query.filter_by(id=id).first()
+        if not power:
+            response_body = {"error": "Power not found"}
+            response = make_response(
+                jsonify(response_body),
+                404
+            )
+        else:
+            response_dict = power.to_dict()
+            response = make_response(
+                jsonify(response_dict), 
+                200
+            )
+            return response
+    
+    def patch(self, id):
+
+        power_record = Power.query.filter_by(id=id).first()
+        for attr in request.form:
+            setattr(power_record, attr, request.form[attr])
         
-api.add_resource(HeroByID, '/heroes/<int:id>')
+        db.session.add(power_record)
+        db.session.commit()
+
+        response_dict = power_record.to_dict()
+
+        response = make_response(
+            jsonify(response_dict),
+            200
+        )
+        return response
+        
+api.add_resource(PowerByID, '/powers/<int:id>')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
