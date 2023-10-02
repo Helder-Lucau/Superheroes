@@ -4,7 +4,7 @@ from flask import Flask, jsonify, make_response
 from flask_migrate import Migrate
 from flask_restful import Api, Resource
 
-from models import db, Hero
+from models import db, Hero, Power, HeroPower
 
 # create your Flask Application and Set the DATABASE URI
 app = Flask(__name__)
@@ -20,6 +20,14 @@ api = Api(app)
 @app.route('/')
 def home():
     return '<h1>Welcome to Hero Power</h1>'
+
+class Heroes(Resource):
+    def get(self):
+        hero_dict = [hr.to_dict() for hr in Hero.query.all()]
+        response = make_response(jsonify(hero_dict), 200)
+        return response
+    
+api.add_resource(Heroes, '/heroes')
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
