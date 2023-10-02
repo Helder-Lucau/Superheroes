@@ -16,8 +16,12 @@ class Hero(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now()) 
 
-    # Relationship One to Many 
-    heropowers = db.relationship('HeroPower', back_populates='hero', cascade='all, delete-orphan')
+    # creating a one to many association betweem Hero and HeroPower 
+    heropowers = db.relationship('HeroPower', back_populates='hero')
+
+    # Instance method that determines the standard output value
+    def __repr__(self):
+        return f'Hero name:{self.name}, Super name: {self.super_name}'
 
 class Power(db.Model, SerializerMixin):
     __tablename__='powers'
@@ -30,8 +34,12 @@ class Power(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now()) 
 
-    # Relationship One to Many
-    heropowers = db.relationship('HeroPower', back_populates='power', cascade='all, delete-orphan')
+    # creating a one to many association betweem Hero and HeroPower 
+    heropowers = db.relationship('HeroPower', back_populates='power')
+
+    # Instance method that returns a printable representation of the object
+    def __repr__(self):
+        return f'Power name:{self.name}, Description: {self.description}'
 
 class HeroPower(db.Model, SerializerMixin):
     __tablename__='hero_powers'
@@ -50,3 +58,6 @@ class HeroPower(db.Model, SerializerMixin):
     hero = db.relationship('Hero', back_populates='heropowers')
     power = db.relationship('Power', back_populates='heropowers')
 
+    # Instance method that returns a printable representation of the object
+    def __repr__(self):
+        return f'Strength:{self.strength}, Hero:{self.hero_id}, Power:{self.power_id}'

@@ -1,4 +1,4 @@
-from random import randint, choice as rc
+from random import random, choice as rc
 from app import app
 from models import db, Hero, Power, HeroPower
 
@@ -24,42 +24,45 @@ hero_list = [
   { "name": "Elektra Natchios", "super_name": "Elektra" }
 ]
 
+strengths = ["Strong", "Weak", "Average"]
+
 with app.app_context():
 
   Hero.query.delete()
   Power.query.delete()
   HeroPower.query.delete()
 
+  print("🦸‍♀️ Seeding heroes...")
   heroes = []
-  for hr in hero_list:
-    hero = Hero(
-      name = hr["name"],
-      super_name = hr["super_name"]
+  for hero in hero_list:
+    hr = Hero(
+      name = hero["name"],
+      super_name = hero["super_name"]
     )
-    heroes.append(hero)
+    heroes.append(hr)
   db.session.add_all(heroes)
   db.session.commit()
 
+  print("🦸‍♀️ Seeding powers...")
   powers = []
-  for pw in power_list:
-    power = Power(
-      name = pw["name"],
-      description = pw["description"]
+  for power in power_list:
+    pw = Power(
+      name = power["name"],
+      description = power["description"]
     )
-    powers.append(power)
+    powers.append(pw)
   db.session.add_all(powers)
   db.session.commit()
 
-# puts "🦸‍♀️ Adding powers to heroes..."
+print("🦸‍♀️ Adding powers to heroes...")
+hero_powers = []
+for hero in heroes:
+  hp = HeroPower(
+    hero_id = hero.id,
+    power = rc(powers),
+    strength = random.choice(strengths)
+  )
+db.session.add_all(hero_powers)
+db.session.commit()
 
-# strengths = ["Strong", "Weak", "Average"]
-# Hero.all.each do |hero|
-#   rand(1..3).times do
-#     # get a random power
-#     power = Power.find(Power.pluck(:id).sample)
-
-#     HeroPower.create!(hero_id: hero.id, power_id: power.id, strength: strengths.sample)
-#   end
-# end
-
-# puts "🦸‍♀️ Done seeding!"
+print("🦸‍♀️ Done seeding!")
