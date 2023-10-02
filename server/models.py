@@ -16,8 +16,8 @@ class Hero(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now()) 
 
-    # Relationship one to many 
-    hero_powers = db.relationship('HeroPower', back_populates='hero', cascade='all, delete-orphan')
+    # Relationship One to Many 
+    heropowers = db.relationship('HeroPower', back_populates='hero', cascade='all, delete-orphan')
 
 class Power(db.Model, SerializerMixin):
     __tablename__='powers'
@@ -30,13 +30,13 @@ class Power(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now()) 
 
-    # Relationship one to many
-    hero_powers = db.relationship('HeroPower', back_populates='power', cascade='all, delete-orphan')
+    # Relationship One to Many
+    heropowers = db.relationship('HeroPower', back_populates='power', cascade='all, delete-orphan')
 
 class HeroPower(db.Model, SerializerMixin):
     __tablename__='hero_powers'
 
-    serialize_rules = ('-hero.hero_powers', '-power.hero_powers',)
+    serialize_rules = ('-hero.hero_powers', '-power.heropowers',)
 
     id = db.Column(db.Integer, primary_key=True)
     strength = db.Column(db.String)
@@ -46,7 +46,7 @@ class HeroPower(db.Model, SerializerMixin):
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 
-    # Relationship patterns many to one
-    hero = db.relationship('Hero', back_populates='hero_powers')
-    power = db.relationship('Power', back_populates='hero_powers')
+    # Relationship patterns Many to One
+    hero = db.relationship('Hero', back_populates='heropowers')
+    power = db.relationship('Power', back_populates='heropowers')
 
