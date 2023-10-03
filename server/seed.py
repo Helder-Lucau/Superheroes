@@ -54,15 +54,16 @@ with app.app_context():
   db.session.add_all(powers)
   db.session.commit()
 
-print("🦸‍♀️ Adding powers to heroes...")
-hero_powers = []
-for hero in heroes:
-  hp = HeroPower(
-    hero_id = hero.id,
-    power = rc(powers),
-    strength = random.choice(strengths)
-  )
-db.session.add_all(hero_powers)
-db.session.commit()
+  print("🦸‍♀️ Adding powers to heroes...")
+  hero_powers = []
+  for hero in heroes:
+    hero_power = HeroPower(
+      hero = rc(heroes),
+      power = rc(powers),
+      strength = rc(strengths)
+    )
+    hero_powers.append(hero_power)
+  db.session.add_all(hero_powers)
+  db.session.commit()
 
-print("🦸‍♀️ Done seeding!")
+  print("🦸‍♀️ Done seeding!")
