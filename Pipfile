@@ -12,6 +12,7 @@ flask-sqlalchemy = "*"
 faker = "*"
 jsonify = "*"
 gunicorn = "*"
+flask-marshmallow = "*"
 
 [dev-packages]
 
