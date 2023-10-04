@@ -23,7 +23,7 @@ class PowerSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
         model = Power
     # Fields to expose
-    fields = ("id","name","description")
+        fields = ("id","name","description")
 
 power_schema = PowerSchema()
 powers_schema = PowerSchema(many=True)
@@ -34,10 +34,8 @@ class HeroSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = Hero
-    # Fields to expose
-    id = ma.auto_field()
-    name = ma.auto_field()
-    super_name = ma.auto_field()
+        # Fields to expose
+        fields = ("id", "name", "super_name")
 
 hero_schema = HeroSchema()
 heroes_schema = HeroSchema(many=True)
@@ -63,9 +61,10 @@ api.add_resource(Index, '/')
 
 class Heroes(Resource):
     def get(self):
-        hero_dict = Hero.query.all()
+        hero = Hero.query.all()
+        hero_dict = heroes_schema.dump(hero)
         response = make_response(
-            heroes_schema.dump(hero_dict), 
+            jsonify(hero_dict), 
             200
             )
         return response
