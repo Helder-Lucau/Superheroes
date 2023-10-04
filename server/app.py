@@ -122,19 +122,16 @@ api.add_resource(Powers, '/powers')
 class PowerByID(Resource):
     def get(self, id):
 
-        power_dict = Power.query.filter_by(id=id).first()
-        if not power_dict:
-            response_body = {"error": "Power not found"}
-            response = make_response(
-                jsonify(response_body),
-                404
-            )
+        power_list = Power.query.filter_by(id=id).first()
+
+        if not power_list:
+            return make_response ({"error": "Power not found"}, 404)
         else:
-            response = make_response(
-                power_schema.dump(power_dict), 
+            response = power_schema.dump(power_list)
+            return make_response(
+                jsonify(response),
                 200
             )
-            return response
     
     def patch(self, id):
 
