@@ -1,0 +1,8 @@
+flask 
+flask-migrate 
+flask-restful 
+flask-sqlalchemy 
+jsonify 
+gunicorn 
+flask-marshmallow
+marshmallow-sqlalchemy
